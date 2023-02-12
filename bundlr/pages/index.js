@@ -17,12 +17,10 @@ export default function Home() {
   const[image,setimage]=useState();
   const[text,setText]=useState("");
   const[URI,setURI]=useState();
-  const[amount,setAmount]=useState();
   const[address,setAddress]=useState();
   const[profileId,setprofileId]=useState();
   const[handle,setHandle]=useState();
   const[followNftAddress,setfollowNftAddress]=useState();
-  const[size,setSize]=useState();
 
 
   const {initialize,fetchBalance,balance,bundlrInstance}=useContext(MainContext);
@@ -32,38 +30,12 @@ export default function Home() {
     initialize()
   }
 
-  const con="http://arweave.net/SgIeBa_lSMVD8NwM562bbgPXdSyyktlOhSUqqnC2oYg"
-  function read(){
-    fetch(con)
-    .then(res => res.json())
-    .then(json => {
-        // Convert JSON to string
-        console.log(json);
-        return json;
-
-
-     
-        // const blob = new Blob([data], { type: 'application/json' });
-        // console.log(blob);
-
-        // // Create an object URL
-        // const url = URL.createObjectURL(blob);
-
-        // // Download file
-        // download(url, 'users.json');
-
-        // // Release the object URL
-        // URL.revokeObjectURL(url);
-    })
-    .catch(err => console.error(err));
-  }
 
   async function ConnectWallet(){
     const provider=new ethers.providers.Web3Provider(window.ethereum);
     await provider.send("eth_requestAccounts", []);
     const signer = provider.getSigner()
     setAddress(await signer.getAddress());
-    // read();
     try{
       const response=await getProfile(await signer.getAddress());
       intializeBundlr()
@@ -93,8 +65,6 @@ export default function Home() {
 
     const provider = new ethers.providers.Web3Provider(window.ethereum)
   
-
-
     let accessCondition = {
       contractAddress:followNftAddress,
       chainID: 80001
@@ -120,7 +90,7 @@ export default function Home() {
         // your ipfs function to add data
         const data=JSON.stringify(EncryptedMetadata);
         const si=byteSize(data)
-        // await fundWallet(si)
+        await fundWallet(si)
         const res=await uploadFile(data);
         return res
       },)
@@ -158,26 +128,17 @@ export default function Home() {
     }
   }
 
-  // async function getEstimate(){
-  //   const price1MBAtomic = await bundlrInstance.getPrice(size);
-  //   const price1MBConverted = bundlrInstance.utils.unitConverter(price1MBAtomic);
-  //   console.log(`Uploading ${size} bytes to Bundlr costs $${price1MBConverted}`);
-  // }
-
-  //http://arweave.net/v0HUztRB584k4IupM7j92u5f1ozXa4FNq5JMdGGaNBU
 
   async function decrypt(){
-    const conn=read();
     const provider = new ethers.providers.Web3Provider(window.ethereum)
-    await provider.send("eth_requestAccounts", []);
-    const signer = provider.getSigner()
+   
     const sdk = await LensGatedSDK.create({
       provider: new ethers.providers.Web3Provider(window.ethereum),
       signer: provider.getSigner(),
       env: LensEnvironment.Mumbai
     })
 
-    const data=await fetch("http://arweave.net/v0HUztRB584k4IupM7j92u5f1ozXa4FNq5JMdGGaNBU");
+    const data=await fetch(URI);
     const final_data=JSON.parse(await data.text());
 
 
@@ -246,9 +207,9 @@ export default function Home() {
           {/* <button onClick={() =>getEstimate()}>Estimate</button> */}
           <button onClick={() =>post()}>Post</button>
           <button onClick={() =>decrypt()}>decrypt</button>
-          {
+          {/* {
             image && <img src={image} style={{width:"500px"}}/>
-          }
+          } */}
           {
             URI && <a href={URI}>{URI}</a>
           }
