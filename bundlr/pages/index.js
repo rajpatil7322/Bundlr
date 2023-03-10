@@ -145,25 +145,25 @@ export default function Home() {
     const { decrypted } = await sdk.gated.decryptMetadata(final_data);
     console.log({ decrypted })
   }
-  
-  function onFileChange(e) {
-    const file = e.target.files[0];
-    console.log(file.size);
-    setSize(file.size);
-    if (file) {
-      const image = URL.createObjectURL(file)
-      setimage(image)
-      console.log(image);
-      let reader = new FileReader()
-      reader.onload = function () {
-        if (reader.result) {
-          seFile(Buffer.from(reader.result))
-          console.log(Buffer.from(reader.result))
-        }
-      }
-      reader.readAsArrayBuffer(file)
-    }
-  }
+
+  // function onFileChange(e) {
+  //   const file = e.target.files[0];
+  //   console.log(file.size);
+  //   setSize(file.size);
+  //   if (file) {
+  //     const image = URL.createObjectURL(file)
+  //     setimage(image)
+  //     console.log(image);
+  //     let reader = new FileReader()
+  //     reader.onload = function () {
+  //       if (reader.result) {
+  //         seFile(Buffer.from(reader.result))
+  //         console.log(Buffer.from(reader.result))
+  //       }
+  //     }
+  //     reader.readAsArrayBuffer(file)
+  //   }
+  // }
 
   async function uploadFile(data) {    
     let tx = await bundlrInstance.uploader.upload(data)
@@ -194,22 +194,14 @@ export default function Home() {
         <div>
           <h3>Balance: {balance}</h3>
           <div style={{padding:"30px 0px"}}>
-              {/* <input placeholder="Amount to fund the wallet" onChange={e=>setAmount(e.target.value)}/> */}
-              {/* <button onClick={fundWallet}>Fund Wallet</button> */}
           </div>
-          {/* <input type="file" onChange={onFileChange}/> */}
           <textarea
               onChange={onChange}
               placeholder="Encrypted post content"
-            />
-          {/* <button onClick={uploadFile}>Upload File</button> */}
-          {/* <button onClick={() =>gate()}>Gate</button> */}
-          {/* <button onClick={() =>getEstimate()}>Estimate</button> */}
+          />
+          <span>
           <button onClick={() =>post()}>Post</button>
-          <button onClick={() =>decrypt()}>decrypt</button>
-          {/* {
-            image && <img src={image} style={{width:"500px"}}/>
-          } */}
+          </span>
           {
             URI && <a href={URI}>{URI}</a>
           }
